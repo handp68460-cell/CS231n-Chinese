@@ -1,0 +1,4 @@
+
+(hover-notes-images/
+
+(../../assets/lecture-2/

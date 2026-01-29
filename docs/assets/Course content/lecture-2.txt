@@ -1,0 +1,1515 @@
+...about image classification, basically continuing our...
+
+Our discussion on the topic of image classification from last lecture.
+
+And we'll get a little bit into some...
+
+Topics that gets us closer to Neural Networks.
+
+And ultimately convolutional neural networks and so on. We'll start with...
+
+Linear Classifiers.
+
+Moving to the next slide.
+
+And this was the syllabus that we've talked about.
+
+ReLU's last lecture.
+
+And.
+
+And that's what we talked about in our previous lecture, where we did talk about three
+
+Major categories of topics, deep learning basics.
+
+Perceiving and understanding the visual world.
+
+Reconstructing and interacting with the visual world as the three major topics.
+
+And some topics that we will be covering.
+
+in the class and at the end we will have some discussions around.
+
+The human-centered AI aspects.
+
+Today, the goal is to cover the first three islands.
+
+Items, Data-Driven Approaches. I will try to tell you what this
+
+means and linear classification.
+
+As well as the k-nearest neighbor algorithm.
+
+So, like last, the previous...
+
+Let's start.
+
+Let's start with our core task of
+
+Image classification, again, is a core task in
+
+So this is in computer vision, and we actually come back to this task quite often.
+
+Quite often throughout the quarter because it's a very good benchmark and we have some examples.
+
+To tell you how the algorithms work. So this is one of the
+
+These are the items that they come back to quite often.
+
+We want to define the image classification task today.
+
+And then introduce two of the data-driven approaches.
+
+It approaches four image classification, one of them your neighbor, and one of them .
+
+The other one is a linear classifier. There are some other approaches which we
+
+We have listed in our backup slides, and you're welcome.
+
+I come to look at them after the class.
+
+This is what we will be covering.
+
+Classification. Given an image,
+
+And a number of predefined labels.
+
+Predetermined labels, a set of possible labels, such as in this example you see
+
+You see Dark Cat, Trout Plane, and so on.
+
+The job of the system is to assign one of those labels to this.
+
+This image.
+
+To us, this is actually a very, very easy task because our brain
+
+Our cost cognitive system is wired to...
+
+Get a holistic understanding of this image and assign a label to it.
+
+But when it comes to coding this and looking at how a computer can
+
+It can make sense of this image. That's completely a different story.
+
+And we want to see how machines can make sense.
+
+So what makes sense of such data? So images are often
+
+Often defined by matrices of data.
+
+More broadly, more generally, tensors of data.
+
+And often the numbers are, each of the pixel values are...
+
+Between 0 and 255, which is an 8-bit
+
+Data Structure, and since this is an image
+
+A colored image, assuming that it's
+
+With a resolution of 800 by 600.
+
+Since it's an RGB image, it has three channels of red, green and blue RGB.
+
+And therefore, it's a tensor of 800.
+
+100 by 600 by 3, as you can see on the slide.
+
+So,
+
+As you can probably guess, this is the semantic gap.
+
+There's a gap between our perception of this image and how the machine perceives.
+
+And sees the image, right? And in order to be able to
+
+I would be able to even understand how this could be very...
+
+Very challenging. Let's look at some challenges, some variations in this.
+
+This type of imaging data. So let's assume, for example,
+
+As one example, let's assume that we move the camera.
+
+If the camera is moved, for example, panning the camera around,
+
+Even if the cat sits completely and perfectly still,
+
+All of those pixel values, every single pixel value of 800...
+
+200 by 600 by 3 will be changed.
+
+So all these pixels will have a new value. Again,
+
+For us humans, it's the same object.
+
+There's absolutely no difference, but from a computer's perspective, it's
+
+It's completely a new data point. So this is one.
+
+This is one of the challenges, but there are quite a few.
+
+others as well. For example, illumination is another
+
+Challenge. So if you've seen your
+
+Or if you've taken courses in graphics or maybe other vision courses.
+
+Or Digital Image Processing courses for Engineering Applications.
+
+You know that the value of each RGB.
+
+The RGB pixel, the RGB values, are a function.
+
+ReLU, Softmax, Batch, Batch, Batch, Batch, Batch.
+
+And that's why same cat, same.
+
+Object may look at differently in terms of numbers when it comes.
+
+When it comes to being pictured in different illuminations.
+
+With that in mind, so...
+
+Whether the cat is in a dark room or under the sun, still, it's the cat.
+
+It's one cat, but this is creating challenges for the machine.
+
+Can you maybe name some other challenges that
+
+May change the values of the pixels and create.
+
+It creates problems for the machine to recognize objects.
+
+Other than illumination and viewpoint changes that I mentioned.
+
+Background Clutter, Background Objects, yes. Which is actually our next slide.
+
+Yes, background clutter is another challenge.
+
+Just watch out.
+
+anything else zooming in
+
+In and out, yes, so the scale basically of the object in the image.
+
+The image, yes. What else? The resolution of the image that is
+
+That could be considered as, that's definitely a challenge.
+
+It's a big challenge, but often with machine learning models or any
+
+Any model that you want to recognize objects in images.
+
+Since we normalize the size of the image, resolution may not be that.
+
+That's important unless there is zooming effects of the objects.
+
+Occlusion is one of the major problems. Again, as humans, it's very
+
+It's very easy to say, this is cat, these are cats. Even the last one, which is actually
+
+This is actually a very challenging one on the right. You can only see a tail and a little
+
+A little bit of probably par in the right side.
+
+One could say, yes, that could be a type
+
+It could be a tiger, or it could be a raccoon with a...
+
+But because of the context, because we know this.
+
+This is inside a living room on a couch.
+
+Most probably it's a cat. It's a cat. So again, for us, human...
+
+It's not that hard. Beyond that, there are many other
+
+There are problems, deformation. Cats are very deformable.
+
+So, they create
+
+challenges for algorithms to be detected.
+
+It's detected, recognized, I mean, not today's algorithms, generally for building
+
+Step-by-step algorithms that can detect.
+
+So deformation is one of the other major challenges.
+
+And beyond that, the intra...
+
+So the data class variation is one more important thing.
+
+Challenge. We know that cats
+
+Stats can come in different sizes, colors, patterns, or even they can
+
+They have different breeds and all of those are still cats.
+
+But for the machines, it's not that easy.
+
+It's easy to recognize the intra-class variations.
+
+One other interesting challenge is the context.
+
+Because if you only look at that...
+
+That part, that image underwrites. Or if...
+
+An algorithm looks at this.
+
+Without considering the context, it's very easy to classify this as a tiger.
+
+Or some other animal. But because of the context and because
+
+Because we know there's the effect of shadows and
+
+And so on.
+
+Could probably be classified correctly.
+
+So...
+
+But the thing is that the classifiers that we have today can do really great
+
+He did a great job, good jobs at class.
+
+Classifying the images, identifying the objects in images.
+
+Thanks to efforts like ImageNet and also all of the follow up works that
+
+That created larger scale benchmarks for
+
+Training larger scale models.
+
+And in this class, what we want to do is to get to
+
+To a place that we build models that can
+
+Can recognize objects and also other.
+
+Aspects within the image. For the rest of this class,
+
+We are going to be working towards building, step by step, the building blocks that are
+
+That are needed for building those large algorithms. And before-
+
+Before doing so, we have to look at...
+
+The most basic building block of classifying
+
+And that is building, implementing.
+
+A function like this. So if you take
+
+I've taken some of the computer science or engineering courses that often be
+
+You can build frameworks through algorithms, like, for example,
+
+Sorting as a computer algorithm.
+
+It often comes with some if-then-else rules and some for loops.
+
+Loops and so on. So there is a clear flowchart of tasks.
+
+Tasks and steps, if then else, steps that
+
+That creates an algorithm for sorting. But when it comes to images,
+
+And understanding the visual world that is...
+
+Not happening. That is a challenge. There is no way to hard code.
+
+the steps for classifying images. Although,
+
+There has been some efforts in this space. There are papers.
+
+That they've tried to.
+
+To come up with algorithms and the steps to recognize objects.
+
+And one of those was based on edge detectors.
+
+Finding the Edges in...
+
+in the image as a first step and then after
+
+After creating all of these patterns, look at
+
+The important patterns, for example, corners extract some features that are
+
+ReLU, Softmax, Stochastic Gradient, Stochastic Gradient, Stochastic Gradient, Stochastic Gradient.
+
+And based on those, from those, try to map that.
+
+That into the output class.
+
+It's been an interesting effort and it had some.
+
+Some success on very limited variability of time.
+
+of type of images. But this is very hard to, first it's very hard to scale.
+
+These types of algorithms, even if it works, it's very hard to...
+
+To scale, because you have to create these rules and everything.
+
+That's the thing for every single object that you want to recognize. And second, finding
+
+Finding the logic for each of those requires a lot of effort.
+
+by itself as well. So because of these challenges, I think
+
+These types of algorithms, which are based on
+
+ReLU, Softmax, Stochastic Gradient, Stochastic Gradient, Stochastic Gradient, Stochastic Gradient.
+
+Or classifying images have not been quite successful.
+
+Machine Learning comes with this data-driven approach.
+
+So this is a new paradigm of, and another paradigm of.
+
+Looking at this problem from a data-driven perspective,
+
+We define a procedure of...
+
+This is a three-step process. The first one is...
+
+to collect data sets of images and
+
+And their labels. So there are many different ways of if you want to.
+
+Recognize a specific type of object.
+
+The specific types of objects, we can look for data sets or
+
+We have four single data points over the internet to create the data.
+
+Many samples from each of the examples.
+
+We used to be doing this 10, 20 years ago using Search Engine.
+
+Genes and Image Session Genes over the Internet to create these types.
+
+We had all types of datasets. Now we have all of the datasets.
+
+And then the second step is using machine learning algorithms.
+
+I was to train a classifier, basically build a function.
+
+Train that takes the images in the...
+
+Training data and their associated labels and builds a model that
+
+That can relate, associate images with the labels, and then
+
+The last step would be evaluating the classifier.
+
+There are new images, which means
+
+It means implementing a function called predict that takes the model.
+
+And some test images. And for those test images,
+
+that were not part of the training images predicts the label.
+
+ReLU, Softmax, Stochastic Gradients, Stochastic Gradients, Stochastic Gradients, Stochastic Gradients, Stochastic Gradients, Stochastic Gradients.
+
+It's a very simple procedure, but instead of building a log
+
+For logic, we are building a data driven approach for it.
+
+As I said, we want to talk about two popular
+
+methods and classifiers. One of them is nearest neighbor classifier.
+
+This is the easiest form of classification.
+
+We specifically want to go over this because
+
+Because we can learn some of the concepts.
+
+around building these classifiers and it's easier to explain some
+
+some of the details and then we'll move to
+
+To the topical linear classification. To do that, what we do...
+
+To build the nearest neighbor classifier, as I said, we need to build
+
+So this will be train and predict functions.
+
+Train Function needs to just memorize all of the data and labels.
+
+So the training function basically doesn't do anything other than keeping everything in the memory.
+
+And then the prediction function, the predict function,
+
+Looks for the most similar training image. Basically, it creates a look.
+
+Lookup table of all of the images and all of their labels.
+
+And during the prediction or testing time, what
+
+What it does is tries to find the closest one, the most similar image.
+
+And output the label for that image.
+
+Let's look at an example. So assuming that we have these five
+
+As in our training data, then
+
+Yes, you see my cursor.
+
+This is the query image, the input image for prediction. What we want to do is
+
+is to see which of these training data and training images is
+
+It is the most similar to this one. And for that, we need a distance function.
+
+So this distance function needs to take the two images, each pair
+
+So we have a pair of images, each of these images compared to the query image.
+
+And return a value which defines the similarity.
+
+The similarity between these two inputs, these two images.
+
+There are many different ways of doing that. One of the most popular
+
+The most popular ones is L1 distance, which is different.
+
+Defined as the sum over all absolute values of
+
+Pixel differences between the two images, image I1.
+
+As an example, if this is a testing image, if we
+
+wants to calculate the distance of this image with
+
+An image in the training data, we do a
+
+The pixel-wise subtraction and the difference between the pixel value.
+
+And then sum them up, which defines this new value.
+
+As, as the, the distance
+
+The distance between these two images.
+
+This is the most basic distance function, but it's actually very useful.
+
+in many applications. You'll be coming back to this L1 and L1.
+
+And other variations of distances in the class quite often.
+
+With this very simple definition, we want to see how we can get this implemented.
+
+As I said, the first step is to just memorize the training data.
+
+The train function just keeps the data in the memory.
+
+And then what the predict function does
+
+It does, using actually some Python libraries and NumPy.
+
+We can implement this in just four lines.
+
+Calculate the distances between each of the testing samples.
+
+And the training data.
+
+Take the minimum for each of the testing samples.
+
+And then output the label for it.
+
+for the for the for the one with mean index. So this is
+
+This is going to be the implementation for the predict function.
+
+Yeah, the pixel values, as I explained,
+
+The most, the simplest form.
+
+This is a tensor of 800 by 600 by 3.
+
+ReChannels, and these are RGB values for each of the pixel.
+
+So, yes, I should actually repeat the questions.
+
+For online students too. And the question was the pixel values, what do they represent?
+
+Yeah, so the next question is why it's between 0 and 255.
+
+So there are many different standards for storing.
+
+The most popular one that we use in
+
+Almost all images that you see online and here.
+
+They are RGB. RGB is a 24-bit format.
+
+It's 32 because there's another channel alpha. We don't want to get into those.
+
+But the 24-bit format, it means that for
+
+For each of the channels, for each of the three channels of red, green, and blue.
+
+Create all of all color combinations. We can have eight bits.
+
+So that's the standard that is defined. There are some other.
+
+And it works too, but this is the most popular one.
+
+So with that, let me go back to the code.
+
+The code and ask you a question.
+
+So...
+
+I know some of the students, most of the students come with
+
+We have a lot of engineering backgrounds and a little bit of computer science as well.
+
+We want to see with, say, n samples, n examples that
+
+So if you look at the models that we have in the training data, how fast the training and prediction happens.
+
+happens. I'm hoping that
+
+You're familiar with the big O notation that we often
+
+Represents computational and sometimes space complexities.
+
+But here, if you look at the algorithms, I'll go
+
+I'll go with the training data. In the training function, and then I want you to...
+
+to help me with the dancer for prediction.
+
+For the training step, the training is of...
+
+Oh, one, because we are not actually doing anything. We are not even moving any data.
+
+You're just keeping the copy of the data in the memory, so no operations.
+
+That means that without operations with an operations of order one, we can...
+
+Can complete the training step. What about the...
+
+This is the prediction step for each of the single examples.
+
+So that's because of the training.
+
+For any of the testing data, how many operations should we take? N.
+
+Again, yes, if we have n training data, it means that we have to calculate
+
+We can calculate the distance of every single testing image with all of the images.
+
+So, at least in the order of n.
+
+So...
+
+This is... This is not...
+
+It's not really good because what we often want to do is, because training
+
+Training is not doing anything, but during testing, during prediction time,
+
+We are spending so much time just to do comparisons between
+
+The data and each single data point and the trainings.
+
+This would be similar to...
+
+The fact that each single time that you ask that GPT a question, it
+
+It will try to see what the answer is and compare it with all of the possible answers.
+
+The answer is over the internet, which will take years and then return your.
+
+So it wouldn't work when it wants to scale.
+
+For very simple problems, we used to be using these types of approaches.
+
+So, what you often want is to
+
+build classifiers that are fast during prediction.
+
+They do it much faster, but it's okay if they take a lot of time to do during the training.
+
+The training, because that could be done offline.
+
+In mind, although there has been a lot of efforts making
+
+Making Nearest Neighbor much faster.
+
+Using GPUs and so on, which are beyond the scope of this class.
+
+If you're interested you can take a look at those. But with that I want to look at some
+
+Some of the visualizations and how this algorithm in general works.
+
+So, given this space that we have five classes of
+
+Red, Blue, Green, Purple, and Red. I'm sorry, Yellow.
+
+And each dot represents one.
+
+One training sample in that class. If you partition the space
+
+For every single point, you see that we can create these files.
+
+These five partitions, let's say five or in this case six.
+
+Different partitions that each point
+
+If you have a testing sample that is in that specific region,
+
+The color of that region shows what's the nearest neighbor for that.
+
+That sample will be. So this is going to...
+
+So this is going to be the nearest neighbor algorithm, one nearest neighbor algorithm, partition this.
+
+Space in this setting.
+
+But do you see a problem here?
+
+Here in this example. So the yellow one is exactly...
+
+is in the middle of all of the greens. And this means that probably that's an outcome.
+
+Outlier. That's probably a noise, and this is the case for many, many problems that you have.
+
+We have to solve. And with that...
+
+The reason that there is this big yellow ring
+
+The original region in the middle is just this single point.
+
+Because you're only using one nearest neighbor, this happens to make it a little bit more
+
+So if it's more robust, we can increase the number of nearest neighbors that we take, which
+
+It turns the nearest neighbor algorithm into a k-nearest neighbor.
+
+We often select more than one point.
+
+ReLU, Softmax, Batch, Batch, Batch.
+
+We are rewarding for identifying the label.
+
+for any given testing sample, testing image.
+
+But the problem that you can see here is
+
+Now we have some white regions. Those white regions are areas that we cannot make it
+
+Make a decision, a complete decision, because those areas are areas that
+
+We have equal number of samples from the neighbors.
+
+from the three different classes.
+
+There is no way to identify what the label of that example is.
+
+And for you, if you create these types.
+
+This means that if you look at these types of spaces for your problems,
+
+Spaces, it means that those are good regions to go and collect more data for.
+
+So those are unclear spaces. So it's a good way of finding.
+
+Regions that are important for more data collection.
+
+Okay, so we can go larger on the value of the K.
+
+But one of the choices that we have, one of the
+
+Factors that plays an important role is the value
+
+But if you remember, we had another decision to make.
+
+Which was the distance function. We talk about the L1 distance again.
+
+Again, sum of all of the absolute values.
+
+Between pairwise differences of the pixels.
+
+And if I be-
+
+So I visualize the L1 distance, or sometimes in some context, we call it Manhattan distance.
+
+The distance function.
+
+This function is kind of visualized in this way.
+
+If I look at this square that I have in the...
+
+In this space, all of the points on that square
+
+They have the same distance from the origin.
+
+Center point. So this is a good way of visualizing
+
+and seeing how this L1 distance function works. Another popular
+
+In our framework, another popular distance function that we use is L2, which
+
+Which instead of the absolute value, calculates the score.
+
+The square of the differences sums it up, but because of the square we also do
+
+So do a square root. And visualizing that, we'll get the circle.
+
+Visualization.
+
+So this is the second, where each of the points in the circle, they have the same.
+
+The same distance from the center, from the origin.
+
+Stochastic Gradient Descentration actually helps us understand the differences between these distances too, and these are the most
+
+The most basic and easiest distance functions that we can use. So there are, again, a lot more.
+
+The reason this visualization is helpful.
+
+And what's helpful is because sometimes if you rotate the, so X and Y in these
+
+These two visualizations are basically the features. If we have two pixel values...
+
+So if you have two features, then we have this 2D space and this X and Y are
+
+are often those features. So if I rotate the
+
+These features, meaning if I use other types of features,
+
+L1 will have a different framework, different value, while it's not any different for L2.
+
+So that's why this is a big difference between L1 and L2.
+
+And sometimes if our features are very specific and meaningful and we want
+
+They want to preserve their information. Often L1 is more important, is better.
+
+Because it has kind of...
+
+As you can see, a shape that preserves and
+
+Enforces distances based on the features, but if there
+
+These features are more arbitrary, then L2 distance makes more sense.
+
+If I want to calculate the distance, so the distance of all of the
+
+All of the points on this shape from the origin are exactly the same.
+
+It's probably the same, right? If I use the L1 distance.
+
+For L2 distance, the points on this circle have the same.
+
+The same distance from the center or the origin of this.
+
+This is space.
+
+That's basically the main...
+
+What these two images are showing. Any point on this.
+
+When using an L1 distance, have the same distance.
+
+And for the SQL, any point on the SQL, if you're using
+
+L2 distance will have the same distance from the origin.
+
+Yeah, why it's important to, it's better to use L1.
+
+We want to preserve the features. So to answer that question,
+
+If I rotate the feature axis,
+
+The distances and this distance function changes completely, right?
+
+And if I do the same here, nothing changes.
+
+It's the exact same value of the features, right?
+
+So in this case, L1 is very sensitive.
+
+It's not sensitive on the feature values, while L2 is not.
+
+Another feature in the same space that creates a different shape.
+
+Then your L function, the distance function changes as well.
+
+So if I draw the lines here, again the question for
+
+For online students, it's why it changes if you rotate. If I select another feature,
+
+That goes from this side, right? Then the lines will look different.
+
+Right? So if you rotate this thing...
+
+But for that shape, it's agnostic.
+
+Right? So with these two distance functions that we
+
+That we talked about, if I re-visualize the...
+
+So, space, you can see with k equals to one, with one,
+
+This is the one nearest neighbor with L1 and L2. These are the space partitions.
+
+One of the interesting things that you can see here is that with L1,
+
+So this is the one function, most of the
+
+Most of the boundaries are parallel to the two.
+
+The two axis, the two features, X1 and X2, very much sensitive.
+
+These are the features, while there we have a little bit more smooth.
+
+Boundary Separation. So there is a
+
+There's a tool online on the lab website that you can play around with this.
+
+With different distance functions and different number of K, you can see.
+
+You can create a different setup so you can figure around with it.
+
+Why did we talk about Nearest Neighbor to begin with? First, yes, it's easy.
+
+The easiest problem to solve, easiest solution to solve.
+
+Solution Easiest Data-Driven Approach.
+
+That's a great way to start with, but one of the main reasons that we want to...
+
+Iterate and discuss nearest neighbor is the fact that
+
+We can look into the topic of hyper.
+
+Hyperprometers are often some of
+
+The variables that you have to make a decision on.
+
+to be able to run your algorithm. In this case, the value K
+
+K, the number of nearest neighbors is defined as
+
+is a hyperparameter, depending on how many number of
+
+The number of nearest neighbors you take, your outputs will be different.
+
+Another choice that we have here is the distance function.
+
+So, the choice of hyperprometers
+
+Operators are often very much dataset-dependent and sometimes problem.
+
+And we have to have a way to
+
+to identify those, to kind of optimize for them.
+
+for each single problem. And that's what is often
+
+It's often referred to as hyperparameter tuning in machine learning algorithms, in deep learning algorithms.
+
+And so on. And how to do that, how to set
+
+In the hyperparameters, there are different approaches. One of them is to choose the
+
+Use the hyperparameters that work the best for the training data.
+
+So, you have a set of images or data in your training data.
+
+Look for the best set of hyperparometers that generate
+
+It generates the best training or minimal.
+
+While it works for the training data,
+
+It's not a good idea at all because, especially with Nearest Neighbors,
+
+K equal to one is always the best value, right? Because
+
+You're memorizing training data, so k equal to 1 will give you always the...
+
+100% accuracy. So we know that this is
+
+This is not a great idea. The second one is choosing hyperprometrics.
+
+There's a parameter that works best for a held out testing set.
+
+While this is a little bit better than the first one,
+
+There is also a big problem here. Can anybody say why this is?
+
+This is a problem. Exactly, so it's kind of cheating because
+
+Because you are trying to find the best hyperparameter that works on the testing data.
+
+And you don't know how the model will work on any other data points.
+
+ReLU points, not in the testing set. So yes, that is exactly.
+
+It's not a good idea because we don't know how the model works.
+
+The model will generalize. And for sure, never do this.
+
+As we talked about, it's kind of cheating.
+
+And a better idea is to always
+
+Separate, take some part of the training data as validation sets.
+
+And train your model under training data, under train...
+
+The main portion of the new portion that we call train.
+
+Try to find or optimize your hyperparameter on the validation
+
+And after you've found the best set of hyperpowers,
+
+Then you use those hyperparameters to replicate the results for the testing.
+
+The testing set and the predictions for the testing set. So this is a much better approach.
+
+approach, although it does have some challenges.
+
+Itself, because sometimes
+
+Sometimes the validation set that you've selected, it may not be a good representative of
+
+of the entire landscape because your validation set is almost always much smaller.
+
+And that's why one of the better approach is to use
+
+Cross-validation for setting hyperparameters. Basically you split your
+
+So you can add your training data into a number of folds, a number of partitions here in this case.
+
+There is five, and each of the folds plays as the validation.
+
+So if you run the validation set once, and iteratively you run this five times for five-fold class validation,
+
+You do this five times and average the accuracies.
+
+The value of the hyperparameter, you run this for all these five sets. Define the accuracy.
+
+Calculate the accuracy on the validation set, average it. And then you do this multiple times.
+
+You have to find the best setting for the hyperparameter. After you've found the hyperparameter setting, you apply it to the testing set.
+
+This is a little bit more reliable and generates much better results.
+
+Although in larger scale deep learning, it is less practiced.
+
+Because repeating this multiple times and five times with huge data sets is very hard, so we often use
+
+We use intuitions for setting hyperparameters, and the single validation set is sometimes
+
+That's sometimes the approach we go with. But this is pretty much advised.
+
+Again, outside computer vision, outside larger scale data sets, often research papers required.
+
+Why are doing these types of cross-validation?
+
+And these types of statistical frameworks to make sure your results are reproduced.
+
+It's usable on a testing set. Anyways, so there are different approaches.
+
+Finalize the topic, wrap up the topic of nearest neighbor.
+
+And look at some examples, some results.
+
+Let me introduce you to CIFAR 10 dataset. It's one of the datasets that you're going to be using in your
+
+assignments quite often. It has 10 classes with a number of training.
+
+Images and Testing Images. The 10 classes, some of the examples are shown here.
+
+The nearest neighbor for each of the testing images if we run
+
+Nearest Neighbor and select the top 10 nearest neighbors, they are all
+
+Visualized there, as you can imagine and guess.
+
+Yes, one of the first questions to answer is how many
+
+What should be the value for K? How many nearest neighbors should we take? And I want to study one of the
+
+Quick experiments with five-fold. Each of those points is one of the folds.
+
+So we have three-folds and five-folds for each of the values of K.
+
+Different values here. And as you can probably see here, k equal to 7.
+
+It generates the best results in terms of accuracy, which is close to 20.
+
+29, 28% accuracy, which is
+
+Which is actually not too bad because this is a 10 class classification problem.
+
+So if you have a class classification problem, often the random guess gets you a 10% accuracy.
+
+So this is much better than random guess. So it's working. It's doing something.
+
+There's a lot of room to improve. So if we go back and look at the...
+
+Examples, you can actually see there are so many mistakes, especially with the one that is closest.
+
+For example, the fourth row, if you look at that, it's a frog, but the first example seems to be a cat.
+
+It's a cat, sorry, a dog. And you can guess why this is happening because
+
+Because the distance is being applied on pixels.
+
+They look like each other. They have the same type of colors in most pixels.
+
+So, they are much closer. This example and many other examples show that distances that
+
+The processes that work on pixels and pixel values are not the best choices. We never practice them.
+
+There are much better approaches that we'll be discussing at the end of more.
+
+We'll see more in the future lectures and just
+
+Just to wrap up the topic, this is another example. If you look at this original image, those three images
+
+While they look very much different in terms of color or maybe occlusion or
+
+Or the one in the third one from the left side is just .
+
+It's the same image with one pixel shifting to the right, I think.
+
+From a human eye's perspective, there is absolutely no difference.
+
+The distance between that and original image is the same as the other two examples that you see here.
+
+We'll stop for a couple of questions, and this is the summary of what we've discussed.
+
+Make a decision, right? In those cases, we often go with randomly selected one of the tops.
+
+So if you are to collect more data, if you're, for example,
+
+For example, you're solving a problem now in genetics, or you're solving a problem in medical imaging.
+
+Visualize your examples, your features, whatever.
+
+And then in this nearest neighbor space, you do see pockets of space that you don't have any.
+
+Any good samples for, or there's ambiguity, then you often try to
+
+to go and find other samples that lie in that same area in that space. OK.
+
+So summarizing what you've talked about with k-nearest neighbor,
+
+It was mostly about understanding
+
+Understanding the easiest algorithm, data-driven approach, and then talking a little bit about hyperprometrics.
+
+So that's how we get better tuning and how distance metrics and the value of K play a very important role.
+
+Moving on to the next topic, which is linear classifiers.
+
+I have five minutes' time to cover this. I want to...
+
+I'll spend the remaining time of this lecture to talk about this very important topic.
+
+I think this is the most important building block for almost
+
+All of deep learning.
+
+And we need to see how this approaches.
+
+Approach is different. So first, we want to see how it's different from nearest neighbor. So this is a parametric app.
+
+approach, meaning that now we are learning, we are finding some parameters.
+
+We have some weights, W, or some weights that map the input image into the output
+
+classes, the output numbers. In this case, when we create this function f that
+
+That maps input to the output. Often those outputs are kind of membership scores.
+
+So you can see the scores of the image to each of those 10.
+
+Output Classes, Labels. So with this setup that we build, a linear
+
+So the linear classifier first maps, uses W, uses D.
+
+These parameters to map each of the inputs x into a value, which is the...
+
+Outputs Y. And how this is done is very simple. This image
+
+Which is basically an array of, say, 32 by 32 by 3.
+
+We have 3072 numbers, and this defines our x.
+
+Which is 3072 by one vector. And we know that we have 10
+
+10 output classes, so we need 10 different scores. And the scores are the output will be
+
+So this would be kind of a vector of 10 by 1. And this means that we have to identify to find
+
+You can find a weight matrix W, that is a 10 by 3072.
+
+That maps x into the output scores. Just to complete this linear function,
+
+We often use this bias term as well.
+
+It's an input independent value, which actually has a lot of different
+
+There are different use cases. I can talk about it when I do some geometric visualizations.
+
+It sometimes creates a shift for different class classes scores.
+
+Helps with much better separation of each class.
+
+As I said, these linear functions are actually building blocks for building neural networks.
+
+So this works. Each of these linear classifiers, linear functions, then put together...
+
+One after the other, create these large neural networks.
+
+There are a lot of other things that need to be added here, but this is one of the most important.
+
+Important components. If you look at some of the popular
+
+In the popular neural networks, we can see that linear functions are
+
+are everywhere in the architectures.
+
+To understand what this mapping and this function is doing, let's go back to our example of CIFAR10.
+
+And our training and testing samples and so on. And even make it a little bit simpler.
+
+Instead of looking at large images of 32 by 32, let's look at images of 2 by 2.
+
+An input image that has four pixels. This means that the...
+
+Input image is turned into a vector, as you can see here.
+
+We have to find a W and the values of B.
+
+So the input image is mapped into some scores as the output.
+
+So this is how the linear function from an algebraic.
+
+That's what the basic viewpoint looks like. The output scores here, we are considering three classes of CatDog.
+
+And as you can see, this
+
+This function maps the image, the vector representing the image into those
+
+So, algebraic viewpoint of linear classification.
+
+Now let's look at some visual perspectives of this linear classifier.
+
+As you can see, we often create each of these images as
+
+We talked about for this image, for each of the
+
+We define some sort of, we have a row of this.
+
+Rowing the matrix W, right? So this row is kind of a template for that specific class.
+
+If I separate it like this, so this image is multiplied by w and b and
+
+The NW is, this is the template from each of the three classes of .
+
+I can ship, and after training or building the model on the
+
+The CIFAR dataset, if I look at the visual perspective, visual...
+
+The visual point, viewpoint of the linear classifier, if I look at those templates that are learned,
+
+For each of the 10 classes, you can see these templates. So it's very interesting that in some
+
+Some of these cases, for example for the example of a car, you do see a front
+
+Front of the Car template-ish. And although this is all done,
+
+We're just one linear classifier. So, the visual aspect, visual viewpoint of the linear...
+
+Linear Classifier, and there is another aspect of Geometric Viewpoint.
+
+What this linear classifier often does is finding those lines.
+
+Finding those lines, if it's in 2D space. Finding those lines that separates each class from the others.
+
+And as you can see here, red, blue, and green are defining different.
+
+And in higher dimensional spaces, instead of those lines...
+
+It's these hyperplanes, as you can see in this example.
+
+Sample on the left.
+
+So you can also see the use of the bias term here.
+
+Because if we didn't have the bias, all of these lines should have passed through the origin from the center of that.
+
+Space, which doesn't really make sense, but with the BIOS we can actually create more reliable.
+
+Functions and decision boundaries.
+
+So, a linear function is very useful, a linear classifier is very useful for
+
+So many applications, as we talked about, and it's a building block of
+
+More complex neural networks, but it does have its own challenges because it doesn't, it can't.
+
+We can't classify many instances of separate data.
+
+Yeah, for example, in this case, if class one is the first and third quadrant and the second class is
+
+There's no way to linearly separate these. Another example is
+
+If we have this type of separation between class one and class two, that
+
+That shows the distance from the origin being between 1 and 2 as class 1 and then everything.
+
+Everything else is Class 2. Similarly, if there are three modes, three areas in the space that are
+
+They are one class, and then the second class is everything else. So in all of these cases, it's actually very hard to do that.
+
+So, what we...
+
+We talked about the classifiers and how they can
+
+They can actually map the input images into any form of labels in the outputs.
+
+But now what remains is how to choose the value w, that for each of these
+
+One of these images maps the image into a score for each single class as the output.
+
+And in order to do that, we need to define a loss function, sometimes referred to as objective function.
+
+That quantifies how bad the classifier, how bad the model.
+
+So the level of unhappiness with respect to the
+
+The score on the training data. After defining those we need to find a way
+
+So this is a way to efficiently change the values of W to be able to...
+
+To minimize that unhappiness, basically minimize the loss function.
+
+And this is the optimization process, the topic of next class.
+
+In order to do that, again, for
+
+For simplicity, let's look at an easier and easier example, having these three classes.
+
+This is a linear function, as you can see here.
+
+Three classes of cat, car, and frog, we need a loss function that
+
+That tells how good our current classifier is. And in order to do that, we need to parameterize that.
+
+Problem, XI and YI defining the inputs.
+
+Image label images and the corresponding labels. And then we need the last one.
+
+A distance function that maps, looks at the differences and how
+
+How bad the scores are compared to the ones that are predicted, the predicted scores.
+
+We have X and W, and the ground truth values, the values that are already given, Y.
+
+We often normalize them based on the number of samples as well, but it's not that important.
+
+So this defines the loss function, the objective function.
+
+So, how we can do the optimization and how
+
+How can we really find the W?
+
+There are different ways of defining this L, Li, and I want to talk about
+
+I'm going to talk about Softmax Classifier right now.
+
+An example for that cat, if you remember the scores that were given.
+
+Given we're 3.2, 5.1, and minus 1.7, these are
+
+These are the scores that are the output of the function we discussed.
+
+F, X, I, and W. In order to turn these
+
+These scores are unbounded and the values are often not very much controllable.
+
+Because this is just a linear function, right? In order to turn these into some
+
+Scoring Functions, the best possible way is
+
+is to turn these into probabilities, which defines the probability of the class
+
+That's being this class K for each input image XI, right?
+
+And in order to do that, we first, this is the function that
+
+We use the Softmax function. We first exponentiate the values of this.
+
+This course to create these numbers, when we use the EXP on these numbers,
+
+The numbers will always be the outputs will always be positive, right? And we need to make sure that
+
+So that the probability is always positive. And after creating these numbers, what we can do is just normalize
+
+So exponentiate and then normalize based on the sum of all of the samples, right?
+
+So, then we normalize them based on some of all samples.
+
+And this creates a very good set of values that define
+
+You can find a probability function. So this is a distribution function. They sum to 1.
+
+If I want to interpret these, it's very simple to say it's this.
+
+This set of W's parameters thinks that this
+
+This image is a cat with a probability of 13% or .13.
+
+And obviously, this is making a mistake in this example.
+
+For example, because the W is not a good setting, we should optimize it and change it.
+
+So, these probabilities are the counterparts of these un-normalized
+
+Log probabilities, which are often referred to as logits.
+
+If you've taken other machine learning courses or I'm sure in other fields you've used
+
+We used logistic regression. This is a similar type of framework. This is the exact same framework.
+
+The same work as Logistic Aggression. And since we have multiple classes here,
+
+Because here it's a multinomial logistic regression.
+
+Have you defined the function L? I told you that there are different ways of defining the function L.
+
+We want to define a loss function that, what's the objective here?
+
+So we can maximize the probability of the sample belonging.
+
+belonging to the correct class, right? So we want to maximize the value of 0.13.
+
+Now we have other larger values in that.
+
+Set. So if you want to maximize this, this is a maximum.
+
+It's a maximization problem, right? In order to turn it, because all of the objectives that we define
+
+We try to build a minimization objective function. The first step is just to
+
+To negate the values, right? We negate it, so the maximization problem turns into
+
+So that turns into a minimization problem. And then we also take the log of the value just to make the numbers
+
+The numbers a little bit more manageable. So negative log of that value will define the objective.
+
+The loss function for solving this problem. Very simple.
+
+That's the objective or the loss function for Softmax.
+
+for this logistic regression function. And if you've taken
+
+As I said, other classes like CS229, it's often referred to as .
+
+It has maximum likelihood estimation as well. It's the same algorithm.
+
+With that in mind, I want to say that, as we discussed,
+
+It's the negative of the log of that probability of the correct class.
+
+Which defines.
+
+Defines the objective function, the loss function.
+
+And that's basically that simple. But there are other types of interpreting this framework as well.
+
+So one way of...
+
+Redefining this loss function is saying that we have some estimated probabilities, and we also have
+
+We also have a probability function that defines the correct probabilities. What we want to do is to...
+
+It's supposed to match these two probability functions, right?
+
+To do that, we want to minimize the KL divergence, callback laborer divergence.
+
+This is an information theoretic perspective of looking at this loss function.
+
+And again, those are exactly the same.
+
+KL Divergence in this setting simplifies into
+
+To the same negative luck function that we defined. And even going further, this
+
+This is exactly the cross entropy function because if
+
+If we define this, use this entropy of p,
+
+Which is entropy of the correct values, correct probabilities.
+
+Plus the same KL divergence. Again, this simplifies into the same negative-like function.
+
+And that's because when we use one hot encoding setting for the classes, the
+
+The entropy is zero. So that's one of the reasons that we call this function cross entropy, binary cross entropy.
+
+In all of deep learning you've probably, if you've used any of the
+
+If you have the Neural Network Frameworks, you've heard about BCE, binary cross-entropy, or you will be hearing about it a lot.
+
+So this is the same framework. We start very simple, but we got to
+
+Similarities and differences between each of those.
+
+So the objective, sorry, the loss function was defined as negative log of this probability and the probability
+
+The probability was defined by the Softmax, which we talked about.
+
+Optimizing for this, which is the topic of next session, will give us the right Ws.
+
+But before I end, I want to ask a couple of questions with this definition that you see here.
+
+Here, what is the mean and maximum value that you can see for the loss function?
+
+Yes, it's zero, which turns into minus infinity, but we have an
+
+A negative negation there, so it would be infinity. That is correct. But then we also have to
+
+Yes, that's definitely
+
+That's right. And let me actually look at a second question. Yes.
+
+So when we initialize all of the
+
+Si, so basically the Ws. In the beginning, it's almost random, so the probabilities...
+
+The possibilities of each of the classes becomes mostly
+
+Equal, what is the Softmax Li, assuming we have C classes?
+
+Thank you very much.
+
+And that's usually if it's not yet. So.
+
+Because the probabilities are equal, it means that all of the probabilities are around 1 over C.
+
+And then that will be defined as log of C.
+
+If we have 10 classes, then the log or ln of 10 is 2.3, which is the
+
+Next to me, we know about it.
