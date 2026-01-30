@@ -1,4 +1,4 @@
 
 (hover-notes-images/
 
-(../../assets/lecture-2/
+(../../assets/lecture-3/
